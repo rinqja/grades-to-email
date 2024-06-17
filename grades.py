@@ -2,6 +2,7 @@ import pandas as pd
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import config
 
 # Function to read Excel file and extract relevant data
 def read_excel(file_path):
@@ -9,6 +10,7 @@ def read_excel(file_path):
         df = pd.read_excel(file_path)
         # Strip any leading/trailing spaces from column names and normalize them
         df.columns = df.columns.str.strip().str.replace('  ', ' ')
+        df = df.fillna(0)  # Fill any blank cells with 0
         print("Column names:", df.columns)
         return df
     except Exception as e:
@@ -50,9 +52,9 @@ def send_email(subject, body, to_email, from_email, password):
 # Main function
 def main():
     file_path = 'C:/Users/rionk/Downloads/grades.xlsx'  # Update this path to your actual file path
-    to_email = 'rkelmendi@constructor.university'
-    from_email = 'rionklmndi@gmail.com'  # Update to your actual Gmail address
-    password = 'aajjxgdylyjhrkuc'  # Use the app-specific password here
+    to_email = config.TO_EMAIL
+    from_email = config.FROM_EMAIL
+    password = config.PASSWORD
 
     data = read_excel(file_path)
     if data is not None:
